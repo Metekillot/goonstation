@@ -4135,7 +4135,7 @@ ADMIN_INTERACT_PROCS(/obj/item/mechanics/trigger/button, proc/press)
 		// so you can tell if scrimblo made a cool scene and then dogshit2000 put obscenities on top or whatever.
 		logTheThing(LOG_STATION, null, "draws on [src]: [log_loc(src)]: canvas{\ref[src], [x], [y], [dot_color], [x2], [y2]}")
 
-/// exists just to allow the grabber to attack
+// exists just to allow the grabber to attack
 /mob/living/grabber_goblin
 	name = "\improper Grabber Component"
 	desc = "you shouldn't see this!"
