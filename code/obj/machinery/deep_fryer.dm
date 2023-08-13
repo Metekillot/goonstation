@@ -98,6 +98,7 @@ TYPEINFO(/obj/machinery/deep_fryer)
 		return src.Attackby(W, user)
 
 /obj/machinery/deep_fryer/onVarChanged(variable, oldval, newval)
+	. = ..()
 	if (variable == "fryitem")
 		if (!oldval && newval)
 			SubscribeToProcess()
@@ -144,7 +145,7 @@ TYPEINFO(/obj/machinery/deep_fryer)
 	else
 		src.cooktime++
 
-	if (src.fryitem.material?.mat_id == "ice" && !ON_COOLDOWN(src, "ice_explosion", 10 SECONDS))
+	if (src.fryitem.material?.getID() == "ice" && !ON_COOLDOWN(src, "ice_explosion", 10 SECONDS))
 		if (ismob(fed_ice)) // have we asked someone for ice?
 			var/mob/ice_feeder = fed_ice
 			fed_ice = TRUE
@@ -257,7 +258,7 @@ TYPEINFO(/obj/machinery/deep_fryer)
 	fryholder.overlays = thing.overlays
 	if (isitem(thing))
 		var/obj/item/item = thing
-		fryholder.bites_left = item.w_class
+		fryholder.bites_left = round(item.w_class)
 		fryholder.w_class = item.w_class
 	else
 		fryholder.bites_left = 5

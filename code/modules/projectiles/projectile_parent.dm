@@ -206,8 +206,7 @@
 			proj_data.on_hit(A, angle_to_dir(src.angle), src)
 
 		//Trigger material on attack.
-		if(proj_data?.material) //ZeWaka: Fix for null.material
-			proj_data.material.triggerOnAttack(src, src.shooter, A)
+		proj_data?.material?.triggerOnAttack(src, src.shooter, A)
 
 		if (istype(A,/turf))
 			// if we hit a turf apparently the bullet is magical and hits every single object in the tile, nice shooting tex
@@ -278,11 +277,13 @@
 		if(istype(proj_data))
 			src.icon = proj_data.icon
 			src.icon_state = proj_data.icon_state
+			src.invisibility = proj_data.invisibility
 			if (!proj_data.override_color)
 				src.color = proj_data.color_icon
 		else
 			src.icon = 'icons/obj/projectiles.dmi'
 			src.icon_state = null
+			src.invisibility = INVIS_NONE
 			if (!proj_data) return //ZeWaka: Fix for null.override_color
 			if (!proj_data.override_color)
 				src.color = "#ffffff"
@@ -518,6 +519,7 @@ ABSTRACT_TYPE(/datum/projectile)
 	var/name = "projectile"
 	var/icon = 'icons/obj/projectiles.dmi'
 	var/icon_state = "bullet"	// A special note: the icon state, if not a point-symmetric sprite, should face NORTH by default.
+	var/invisibility = INVIS_NONE
 	var/impact_image_state = null // what kinda overlay they puke onto non-mobs when they hit
 	var/brightness = 0
 	var/color_red = 0
@@ -917,7 +919,7 @@ ABSTRACT_TYPE(/datum/projectile)
  * So I made my own proc, but left the old one in place just in case -- Sovexe
  * var/reflect_on_nondense_hits - flag for handling hitting objects that let bullets pass through like secbots, rather than duplicating projectiles
  */
-/proc/shoot_reflected_bounce(var/obj/projectile/P, var/obj/reflector, var/max_reflects = 3, var/mode = PROJ_RAPID_HEADON_BOUNCE, var/reflect_on_nondense_hits = FALSE)
+/proc/shoot_reflected_bounce(var/obj/projectile/P, var/atom/reflector, var/max_reflects = 3, var/mode = PROJ_RAPID_HEADON_BOUNCE, var/reflect_on_nondense_hits = FALSE)
 	if (!P || !reflector)
 		return
 

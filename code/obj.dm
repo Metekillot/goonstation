@@ -85,7 +85,7 @@
 		. = ..()
 
 	ex_act(severity)
-		src.material?.triggerExp(src, severity)
+		src.material_trigger_on_explosion(severity)
 		switch(severity)
 			if(1)
 				changeHealth(-100)
@@ -104,11 +104,11 @@
 			pressure_resistance = max(20, (src.material.getProperty("density") - 5) * ONE_ATMOSPHERE)
 			throwforce = src.material.getProperty("hard")
 			throwforce = max(throwforce, initial(throwforce))
-			quality = src.material.quality
-			if(initial(src.opacity) && src.material.alpha <= MATERIAL_ALPHA_OPACITY)
-				RL_SetOpacity(0)
-			else if(initial(src.opacity) && !src.opacity && src.material.alpha > MATERIAL_ALPHA_OPACITY)
-				RL_SetOpacity(1)
+			quality = src.material.getQuality()
+			if(initial(src.opacity) && src.material.getAlpha() <= MATERIAL_ALPHA_OPACITY)
+				set_opacity(0)
+			else if(initial(src.opacity) && !src.opacity && src.material.getAlpha() > MATERIAL_ALPHA_OPACITY)
+				set_opacity(1)
 
 	disposing()
 		for(var/mob/M in src.contents)
@@ -241,7 +241,7 @@
 		F["[path].color"] >> color
 		F["[path].density"] >> density
 		F["[path].opacity"] >> opacity
-		RL_SetOpacity(opacity)
+		set_opacity(opacity)
 		F["[path].anchored"] >> anchored
 		F["[path].pixel_x"] >> pixel_x
 		F["[path].pixel_y"] >> pixel_y
@@ -279,7 +279,7 @@
 			if (src.amount <= 0)
 				src.icon_state = "bedbin0"
 		else
-			boutput(user, "There's no bedsheets left in [src]!")
+			boutput(user, "<span class='alert'>There's no bedsheets left in [src]!</span>")
 
 	get_desc()
 		. += "There's [src.amount ? src.amount : "no"] bedsheet[s_es(src.amount)] in [src]."
@@ -307,7 +307,7 @@
 			if (src.amount <= 0)
 				src.icon_state = "bedbin0"
 		else
-			boutput(user, "There's no towels left in [src]!")
+			boutput(user, "<span class='alert'>There's no towels left in [src]!</span>")
 
 	get_desc()
 		. += "There's [src.amount ? src.amount : "no"] towel[s_es(src.amount)] in [src]."
@@ -356,7 +356,8 @@
 /obj/proc/alter_health()
 	return 1
 
-/obj/proc/hide(h)
+/// Whether or not to hide something based on the value of hide, usually whether or not the turf is intact.
+/obj/proc/hide(hide)
 	return
 
 /obj/proc/replace_with_explosive()
